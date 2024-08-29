@@ -1,11 +1,14 @@
 {
   "name": "@texture-finance/superlendy-sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Texture SuperLendy SDK",
-  "main": "build/index.js",
+  "main": "build/src/index.js",
   "files": [
     "build"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "compile": "tsc",
     "compile:watch": "tsc -w",
