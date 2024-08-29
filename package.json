@@ -1,5 +1,5 @@
 {
-  "name": "@caryatid/superlendy-sdk",
+  "name": "@texture-finance/superlendy-sdk",
   "version": "0.0.1",
   "description": "Texture SuperLendy SDK",
   "main": "build/index.js",
