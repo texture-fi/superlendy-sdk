@@ -1,3 +1,5 @@
 # Texture SuperLendy SDK
+
 ## Install
-`npm i @caryatid/superlendy-sdk`
+
+`npm i @texture-finance/superlendy-sdk`
