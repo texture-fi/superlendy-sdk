@@ -141,7 +141,7 @@ export class SuperLendyInstruction {
     textureConfig,
     liquidityMint,
     feeAuthority,
-    curatorFeeAuthority,
+    curatorFeeReceiver,
     borrower = this.auth,
     memo = new Uint8Array(BORROW_MEMO_LEN),
   }: BorrowParams) {
@@ -150,10 +150,7 @@ export class SuperLendyInstruction {
       liquidityMint,
       borrower,
     );
-    const curatorFeeReceiver = getAssociatedTokenAddressSync(
-      liquidityMint,
-      curatorFeeAuthority,
-    );
+
     const textureFeeReceiver = getAssociatedTokenAddressSync(
       liquidityMint,
       feeAuthority,
