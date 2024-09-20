@@ -10,7 +10,7 @@ export interface BorrowParams {
   textureConfig: PublicKey;
   liquidityMint: PublicKey;
   feeAuthority: PublicKey;
-  curatorFeeAuthority: PublicKey;
+  curatorFeeReceiver: PublicKey;
   borrower?: PublicKey;
   memo?: Uint8Array;
 }
