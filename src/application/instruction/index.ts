@@ -46,6 +46,7 @@ import {
 } from '../../domain/layouts/Position';
 import { depositLiquidityParamsLayout } from '../../domain/layouts/Deposit';
 import { unlockCollateralParamsLayout } from '../../domain/layouts/LockCollateral';
+import { withdrawLiquidityParamsLayout } from '../../domain/layouts/Withdraw';
 
 export class SuperLendyInstruction {
   constructor(
@@ -276,6 +277,38 @@ export class SuperLendyInstruction {
       SuperLendyInstructionId.DepositLiquidity,
       { amount },
       depositLiquidityParamsLayout,
+    );
+    return this.ix(keys, data);
+  }
+
+  public withdrawLiquidity(
+    amount: bigint,
+    reserve: PublicKey,
+    reserveMint: PublicKey,
+    auth = this.auth,
+  ) {
+    const [lp_mint] = findLpTokenMint(reserve);
+    const source = getAssociatedTokenAddressSync(reserveMint, auth);
+    const destination = getAssociatedTokenAddressSync(lp_mint, auth);
+
+    const [liquidity_supply] = findLiquiditySupply(reserve);
+    const [program_authority] = findProgramAddress();
+
+    const keys = [
+      SuperLendyInstruction.meta(auth, false, true),
+      SuperLendyInstruction.meta(source, true, false),
+      SuperLendyInstruction.meta(destination, true, false),
+      SuperLendyInstruction.meta(reserve, true, false),
+      SuperLendyInstruction.meta(liquidity_supply, true, false),
+      SuperLendyInstruction.meta(lp_mint, true, false),
+      SuperLendyInstruction.meta(program_authority, false, false),
+      SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+    ];
+
+    const data = this.encode(
+      SuperLendyInstructionId.WithdrawLiquidity,
+      { amount },
+      withdrawLiquidityParamsLayout,
     );
     return this.ix(keys, data);
   }
