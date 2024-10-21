@@ -3,6 +3,7 @@ import {
   Connection,
   PublicKey,
   SystemProgram,
+  SYSVAR_INSTRUCTIONS_PUBKEY,
   TransactionInstruction,
 } from '@solana/web3.js';
 import { Structure } from '@solana/buffer-layout';
@@ -47,6 +48,8 @@ import {
 import { depositLiquidityParamsLayout } from '../../domain/layouts/Deposit';
 import { unlockCollateralParamsLayout } from '../../domain/layouts/LockCollateral';
 import { withdrawLiquidityParamsLayout } from '../../domain/layouts/Withdraw';
+import { flashLoanBorrowParamsLayout } from '../../domain/layouts/FlashLoan/Borrow';
+import { flashLoanRepayParamsLayout } from '../../domain/layouts/FlashLoan/Repay';
 
 export class SuperLendyInstruction {
   constructor(
@@ -374,6 +377,57 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(SystemProgram.programId, false, false),
     ];
     return this.ix(keys);
+  }
+
+  public flashBorrow(
+    amount: bigint,
+    reserve: PublicKey,
+    lpMint: PublicKey,
+    auth: PublicKey = this.auth,
+  ) {
+    const [liquiditySupply] = findLiquiditySupply(reserve);
+    const [programAuthority] = findProgramAddress();
+    const destinationWallet = getAssociatedTokenAddressSync(lpMint, auth);
+
+    const keys = [
+      SuperLendyInstruction.meta(reserve, true, false),
+      SuperLendyInstruction.meta(liquiditySupply, true, false),
+      SuperLendyInstruction.meta(destinationWallet, true, false),
+      SuperLendyInstruction.meta(programAuthority, false, false),
+      SuperLendyInstruction.meta(SYSVAR_INSTRUCTIONS_PUBKEY, false, false),
+      SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+    ];
+    const data = this.encode(
+      SuperLendyInstructionId.FlashBorrow,
+      { amount },
+      flashLoanBorrowParamsLayout,
+    );
+    return this.ix(keys, data);
+  }
+
+  public flashRepay(
+    amount: bigint,
+    reserve: PublicKey,
+    lpMint: PublicKey,
+    auth: PublicKey = this.auth,
+  ) {
+    const [liquiditySupply] = findLiquiditySupply(reserve);
+    const sourceWallet = getAssociatedTokenAddressSync(lpMint, auth);
+
+    const keys = [
+      SuperLendyInstruction.meta(sourceWallet, true, false),
+      SuperLendyInstruction.meta(reserve, true, false),
+      SuperLendyInstruction.meta(liquiditySupply, true, false),
+      SuperLendyInstruction.meta(auth, true, true),
+      SuperLendyInstruction.meta(SYSVAR_INSTRUCTIONS_PUBKEY, false, false),
+      SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+    ];
+    const data = this.encode(
+      SuperLendyInstructionId.FlashRepay,
+      { amount },
+      flashLoanRepayParamsLayout,
+    );
+    return this.ix(keys, data);
   }
 
   private ix(keys: AccountMeta[], data?: Buffer, programId = SUPER_LENDY_ID) {

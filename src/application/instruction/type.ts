@@ -55,6 +55,13 @@ export enum SuperLendyInstructionId {
   /// Withdraw reward tokens from reward supply account
   /// Contract doesn't have DepositReward IX as it can be done by SplToken directly.
   WithdrawReward,
+  // 26
+  /// Flash borrow reserve liquidity
+  FlashBorrow,
+  // 27
+  /// Flash repay reserve liquidity
+  FlashRepay,
+  // 28
   /// Always fails but prints contact version in to returned logs
   Version,
 }
