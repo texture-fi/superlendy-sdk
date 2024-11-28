@@ -10,6 +10,7 @@ export interface PriceFeedLayout {
   version: number;
   _padding0: Uint8Array;
   quote_symbol: number;
+  verification_level: number;
   source_raw: number;
   source_address: PublicKey;
   symbol: Uint8Array;
@@ -24,8 +25,9 @@ export interface PriceFeedLayout {
 export const priceFeedLayout = struct<PriceFeedLayout>([
   blob(8, 'discriminator'),
   u8('version'),
-  blob(5, '_padding0'),
+  blob(4, '_padding0'),
   u8('quote_symbol'),
+  u8('verification_level'),
   u8('source_raw'),
   publicKey('source_address'),
   blob(SYMBOL_MAX_SIZE, 'symbol'),
