@@ -28,7 +28,6 @@
   },
   "include": [
     "src",
-    "cli",
     "src/types.d.ts"
   ]
 }

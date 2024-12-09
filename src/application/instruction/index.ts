@@ -291,8 +291,8 @@ export class SuperLendyInstruction {
     auth = this.auth,
   ) {
     const [lp_mint] = findLpTokenMint(reserve);
-    const source = getAssociatedTokenAddressSync(reserveMint, auth);
-    const destination = getAssociatedTokenAddressSync(lp_mint, auth);
+    const source = getAssociatedTokenAddressSync(lp_mint, auth);
+    const destination = getAssociatedTokenAddressSync(reserveMint, auth);
 
     const [liquidity_supply] = findLiquiditySupply(reserve);
     const [program_authority] = findProgramAddress();
