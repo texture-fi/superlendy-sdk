@@ -173,6 +173,7 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(curator, false, false),
       SuperLendyInstruction.meta(textureFeeReceiver, true, false),
       SuperLendyInstruction.meta(textureConfig, false, false),
+      SuperLendyInstruction.meta(liquidityMint, false, false),
       SuperLendyInstruction.meta(program_authority, false, false),
       SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
     ];
@@ -255,11 +256,12 @@ export class SuperLendyInstruction {
   public depositLiquidity(
     amount: bigint,
     reserve: PublicKey,
-    reserveMint: PublicKey,
+    liquidityMint: PublicKey,
+    liquidityTokenProgram: PublicKey,
     auth = this.auth,
   ) {
     const [lp_mint] = findLpTokenMint(reserve);
-    const source = getAssociatedTokenAddressSync(reserveMint, auth);
+    const source = getAssociatedTokenAddressSync(liquidityMint, auth);
     const destination = getAssociatedTokenAddressSync(lp_mint, auth);
 
     const [liquidity_supply] = findLiquiditySupply(reserve);
@@ -271,9 +273,11 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(destination, true, false),
       SuperLendyInstruction.meta(reserve, true, false),
       SuperLendyInstruction.meta(liquidity_supply, true, false),
+      SuperLendyInstruction.meta(liquidityMint, false, false),
       SuperLendyInstruction.meta(lp_mint, true, false),
       SuperLendyInstruction.meta(program_authority, false, false),
       SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+      SuperLendyInstruction.meta(liquidityTokenProgram, false, false),
     ];
 
     const data = this.encode(
@@ -287,12 +291,13 @@ export class SuperLendyInstruction {
   public withdrawLiquidity(
     amount: bigint,
     reserve: PublicKey,
-    reserveMint: PublicKey,
+    liquidityMint: PublicKey,
+    liquidityTokenProgram: PublicKey,
     auth = this.auth,
   ) {
     const [lp_mint] = findLpTokenMint(reserve);
     const source = getAssociatedTokenAddressSync(lp_mint, auth);
-    const destination = getAssociatedTokenAddressSync(reserveMint, auth);
+    const destination = getAssociatedTokenAddressSync(liquidityMint, auth);
 
     const [liquidity_supply] = findLiquiditySupply(reserve);
     const [program_authority] = findProgramAddress();
@@ -303,9 +308,11 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(destination, true, false),
       SuperLendyInstruction.meta(reserve, true, false),
       SuperLendyInstruction.meta(liquidity_supply, true, false),
+      SuperLendyInstruction.meta(liquidityMint, false, false),
       SuperLendyInstruction.meta(lp_mint, true, false),
       SuperLendyInstruction.meta(program_authority, false, false),
       SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+      SuperLendyInstruction.meta(liquidityTokenProgram, false, false),
     ];
 
     const data = this.encode(
@@ -350,6 +357,8 @@ export class SuperLendyInstruction {
     position: PublicKey,
     reserve: PublicKey,
     lpMint: PublicKey,
+    liquidityMint: PublicKey,
+    liquidityTokenProgram: PublicKey,
     auth = this.auth,
   ) {
     const source_liquidity_wallet = getAssociatedTokenAddressSync(lpMint, auth);
@@ -360,7 +369,8 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(liquidity_supply, true, false),
       SuperLendyInstruction.meta(auth, false, true),
       SuperLendyInstruction.meta(reserve, true, false),
-      SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+      SuperLendyInstruction.meta(liquidityMint, false, false),
+      SuperLendyInstruction.meta(liquidityTokenProgram, false, false),
     ];
 
     const data = this.encode(
@@ -383,6 +393,8 @@ export class SuperLendyInstruction {
     amount: bigint,
     reserve: PublicKey,
     lpMint: PublicKey,
+    liquidityMint: PublicKey,
+    liquidityTokenProgram: PublicKey,
     auth: PublicKey = this.auth,
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
@@ -393,9 +405,10 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(reserve, true, false),
       SuperLendyInstruction.meta(liquiditySupply, true, false),
       SuperLendyInstruction.meta(destinationWallet, true, false),
+      SuperLendyInstruction.meta(liquidityMint, false, false),
       SuperLendyInstruction.meta(programAuthority, false, false),
       SuperLendyInstruction.meta(SYSVAR_INSTRUCTIONS_PUBKEY, false, false),
-      SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+      SuperLendyInstruction.meta(liquidityTokenProgram, false, false),
     ];
     const data = this.encode(
       SuperLendyInstructionId.FlashBorrow,
@@ -409,6 +422,8 @@ export class SuperLendyInstruction {
     amount: bigint,
     reserve: PublicKey,
     lpMint: PublicKey,
+    liquidityMint: PublicKey,
+    liquidityTokenProgram: PublicKey,
     auth: PublicKey = this.auth,
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
@@ -418,9 +433,10 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(sourceWallet, true, false),
       SuperLendyInstruction.meta(reserve, true, false),
       SuperLendyInstruction.meta(liquiditySupply, true, false),
+      SuperLendyInstruction.meta(liquidityMint, false, false),
       SuperLendyInstruction.meta(auth, true, true),
       SuperLendyInstruction.meta(SYSVAR_INSTRUCTIONS_PUBKEY, false, false),
-      SuperLendyInstruction.meta(TOKEN_PROGRAM_ID, false, false),
+      SuperLendyInstruction.meta(liquidityTokenProgram, false, false),
     ];
     const data = this.encode(
       SuperLendyInstructionId.FlashRepay,
