@@ -11,6 +11,7 @@ export interface BorrowParams {
   liquidityMint: PublicKey;
   feeAuthority: PublicKey;
   curatorFeeReceiver: PublicKey;
+  liquidityTokenProgram: PublicKey;
   borrower?: PublicKey;
   memo?: Uint8Array;
 }
