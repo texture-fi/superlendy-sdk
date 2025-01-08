@@ -9,10 +9,13 @@ export interface PriceFeedLayout {
   discriminator: Uint8Array;
   version: number;
   _padding0: Uint8Array;
+  feed_type: number;
   quote_symbol: number;
   verification_level: number;
   source_raw: number;
+  transform_source_raw: number;
   source_address: PublicKey;
+  transform_source_address: PublicKey;
   symbol: Uint8Array;
   logo_url: Uint8Array;
   update_authority: PublicKey;
@@ -25,18 +28,21 @@ export interface PriceFeedLayout {
 export const priceFeedLayout = struct<PriceFeedLayout>([
   blob(8, 'discriminator'),
   u8('version'),
-  blob(4, '_padding0'),
+  blob(2, '_padding0'),
+  u8('feed_type'),
   u8('quote_symbol'),
   u8('verification_level'),
   u8('source_raw'),
+  u8('transform_source_raw'),
   publicKey('source_address'),
+  publicKey('transform_source_address'),
   blob(SYMBOL_MAX_SIZE, 'symbol'),
   blob(LOGO_URL_MAX_LEN, 'logo_url'),
   publicKey('update_authority'),
   u64('update_timestamp'),
   u64('update_slot'),
   u128('price_raw'),
-  blob(160, '_padding'),
+  blob(128, '_padding'),
 ]);
 
 export interface UpdatePriceLayout {
