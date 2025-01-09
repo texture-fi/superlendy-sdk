@@ -242,11 +242,13 @@ export class SuperLendyInstruction {
   public updatePrice(
     priceFeed: PublicKey,
     sourceAddress: PublicKey,
+    transformSourceAddress: PublicKey,
     maximum_age_sec = 60n,
   ) {
     const keys = [
       SuperLendyInstruction.meta(priceFeed, true, false),
       SuperLendyInstruction.meta(sourceAddress, true, false),
+      SuperLendyInstruction.meta(transformSourceAddress, true, false),
     ];
 
     const data = this.encode(
