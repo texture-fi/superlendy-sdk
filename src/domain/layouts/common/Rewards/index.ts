@@ -1,6 +1,6 @@
 import { seq, struct } from '@solana/buffer-layout';
 import { PublicKey } from '@solana/web3.js';
-import { publicKey, u64 } from '@solana/buffer-layout-utils';
+import { publicKey, u128, u64 } from '@solana/buffer-layout-utils';
 
 const MAX_REWARDS = 10;
 
@@ -13,7 +13,8 @@ export interface RewardLayout {
 const rewardLayout = struct<RewardLayout>([
   publicKey('reward_mint'),
   u64('accrued_slot'),
-  u64('accrued_amount'),
+  u64('_padding'),
+  u128('accrued_amount'),
 ]);
 
 export interface RewardsLayout {
