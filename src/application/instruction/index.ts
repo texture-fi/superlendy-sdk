@@ -27,6 +27,8 @@ import {
   findLpTokenMint,
   findProgramAddress,
   findReserveCollateralSupply,
+  findRewardProgramAuthority,
+  findRewardSupply,
 } from '../pda';
 import {
   getAssociatedTokenAddressSync,
@@ -404,11 +406,21 @@ export class SuperLendyInstruction {
     return this.ix(keys, data);
   }
 
-  public claimReward() {
+  public claimReward(position: PublicKey, pool: PublicKey, mint: PublicKey, tokenProgram: PublicKey, destinationWallet: PublicKey, auth = this.auth) {
     const keys = [
-      SuperLendyInstruction.meta(SystemProgram.programId, false, false),
+      SuperLendyInstruction.meta(position, true, false),
+      SuperLendyInstruction.meta(findRewardSupply(pool, mint)[0], true, false),
+      SuperLendyInstruction.meta(destinationWallet, true, false),
+      SuperLendyInstruction.meta(auth, false, true),
+      SuperLendyInstruction.meta(pool, false, false),
+      SuperLendyInstruction.meta(mint, false, false),
+      SuperLendyInstruction.meta(findRewardProgramAuthority(pool)[0], false, false),
+      SuperLendyInstruction.meta(tokenProgram, false, false),
     ];
-    return this.ix(keys);
+
+    const data = this.encode(SuperLendyInstructionId.ClaimReward);
+
+    return this.ix(keys, data);
   }
 
   public flashBorrow(
