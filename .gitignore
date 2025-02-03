@@ -1,6 +1,6 @@
 .idea
-./build
-./cli
-./keys
-./node_modules
+build
+cli
+keys
+node_modules
 .env
