@@ -61,7 +61,10 @@ export enum SuperLendyInstructionId {
   // 27
   /// Flash repay reserve liquidity
   FlashRepay,
-  // 28
+  ProposeConfig,
+  ApplyConfigProposal,
+  DeleteReserve,
+  TransferTextureConfigOwnership,
   /// Always fails but prints contact version in to returned logs
   Version,
 }
