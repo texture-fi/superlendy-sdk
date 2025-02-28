@@ -52,6 +52,7 @@ import { unlockCollateralParamsLayout } from '../../domain/layouts/LockCollatera
 import { withdrawLiquidityParamsLayout } from '../../domain/layouts/Withdraw';
 import { flashLoanBorrowParamsLayout } from '../../domain/layouts/FlashLoan/Borrow';
 import { flashLoanRepayParamsLayout } from '../../domain/layouts/FlashLoan/Repay';
+import { versionParamsLayout } from '../../domain/layouts/Version';
 
 export class SuperLendyInstruction {
   constructor(
@@ -59,12 +60,16 @@ export class SuperLendyInstruction {
     public readonly connection: Connection,
   ) {}
 
-  public version() {
+  public version(no_error: boolean) {
     const keys = [
       SuperLendyInstruction.meta(SystemProgram.programId, false, false),
     ];
 
-    const data = this.encode(SuperLendyInstructionId.Version);
+    const data = this.encode(
+      SuperLendyInstructionId.Version,
+      { no_error },
+      versionParamsLayout,
+    );
     return this.ix(keys, data);
   }
 
@@ -406,7 +411,14 @@ export class SuperLendyInstruction {
     return this.ix(keys, data);
   }
 
-  public claimReward(position: PublicKey, pool: PublicKey, mint: PublicKey, tokenProgram: PublicKey, destinationWallet: PublicKey, auth = this.auth) {
+  public claimReward(
+    position: PublicKey,
+    pool: PublicKey,
+    mint: PublicKey,
+    tokenProgram: PublicKey,
+    destinationWallet: PublicKey,
+    auth = this.auth,
+  ) {
     const keys = [
       SuperLendyInstruction.meta(position, true, false),
       SuperLendyInstruction.meta(findRewardSupply(pool, mint)[0], true, false),
@@ -414,7 +426,11 @@ export class SuperLendyInstruction {
       SuperLendyInstruction.meta(auth, false, true),
       SuperLendyInstruction.meta(pool, false, false),
       SuperLendyInstruction.meta(mint, false, false),
-      SuperLendyInstruction.meta(findRewardProgramAuthority(pool)[0], false, false),
+      SuperLendyInstruction.meta(
+        findRewardProgramAuthority(pool)[0],
+        false,
+        false,
+      ),
       SuperLendyInstruction.meta(tokenProgram, false, false),
     ];
 
