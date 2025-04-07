@@ -272,16 +272,18 @@ export class SuperLendyInstruction {
     reserve: PublicKey,
     liquidityMint: PublicKey,
     liquidityTokenProgram: PublicKey,
+    source: PublicKey,
+    destination: PublicKey,
     auth = this.auth,
   ) {
     const [lp_mint] = findLpTokenMint(reserve);
-    const source = getAssociatedTokenAddressSync(
-      liquidityMint,
-      auth,
-      false,
-      liquidityTokenProgram,
-    );
-    const destination = getAssociatedTokenAddressSync(lp_mint, auth);
+    // const source = getAssociatedTokenAddressSync(
+    //   liquidityMint,
+    //   auth,
+    //   false,
+    //   liquidityTokenProgram,
+    // );
+    // const destination = getAssociatedTokenAddressSync(lp_mint, auth);
 
     const [liquidity_supply] = findLiquiditySupply(reserve);
     const [program_authority] = findProgramAddress();
@@ -312,16 +314,18 @@ export class SuperLendyInstruction {
     reserve: PublicKey,
     liquidityMint: PublicKey,
     liquidityTokenProgram: PublicKey,
+    source: PublicKey,
+    destination: PublicKey,
     auth = this.auth,
   ) {
     const [lp_mint] = findLpTokenMint(reserve);
-    const source = getAssociatedTokenAddressSync(lp_mint, auth);
-    const destination = getAssociatedTokenAddressSync(
-      liquidityMint,
-      auth,
-      false,
-      liquidityTokenProgram,
-    );
+    // const source = getAssociatedTokenAddressSync(lp_mint, auth);
+    // const destination = getAssociatedTokenAddressSync(
+    //   liquidityMint,
+    //   auth,
+    //   false,
+    //   liquidityTokenProgram,
+    // );
 
     const [liquidity_supply] = findLiquiditySupply(reserve);
     const [program_authority] = findProgramAddress();
