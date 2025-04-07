@@ -446,14 +446,13 @@ export class SuperLendyInstruction {
   public flashBorrow(
     amount: bigint,
     reserve: PublicKey,
-    lpMint: PublicKey,
     liquidityMint: PublicKey,
     liquidityTokenProgram: PublicKey,
     auth: PublicKey = this.auth,
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
     const [programAuthority] = findProgramAddress();
-    const destinationWallet = getAssociatedTokenAddressSync(lpMint, auth);
+    const destinationWallet = getAssociatedTokenAddressSync(liquidityMint, auth);
 
     const keys = [
       SuperLendyInstruction.meta(reserve, true, false),
@@ -475,13 +474,12 @@ export class SuperLendyInstruction {
   public flashRepay(
     amount: bigint,
     reserve: PublicKey,
-    lpMint: PublicKey,
     liquidityMint: PublicKey,
     liquidityTokenProgram: PublicKey,
     auth: PublicKey = this.auth,
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
-    const sourceWallet = getAssociatedTokenAddressSync(lpMint, auth);
+    const sourceWallet = getAssociatedTokenAddressSync(liquidityMint, auth);
 
     const keys = [
       SuperLendyInstruction.meta(sourceWallet, true, false),
