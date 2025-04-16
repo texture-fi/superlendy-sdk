@@ -452,7 +452,7 @@ export class SuperLendyInstruction {
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
     const [programAuthority] = findProgramAddress();
-    const destinationWallet = getAssociatedTokenAddressSync(liquidityMint, auth);
+    const destinationWallet = getAssociatedTokenAddressSync(liquidityMint, auth, false, liquidityTokenProgram);
 
     const keys = [
       SuperLendyInstruction.meta(reserve, true, false),
@@ -479,7 +479,7 @@ export class SuperLendyInstruction {
     auth: PublicKey = this.auth,
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
-    const sourceWallet = getAssociatedTokenAddressSync(liquidityMint, auth);
+    const sourceWallet = getAssociatedTokenAddressSync(liquidityMint, auth, false, liquidityTokenProgram);
 
     const keys = [
       SuperLendyInstruction.meta(sourceWallet, true, false),
