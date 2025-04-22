@@ -36,6 +36,7 @@ import {
 } from '@solana/spl-token';
 import { SuperLendyAccounts } from '../accounts';
 import {
+  ClosePositionParams,
   CreatePositionParams,
   PositionType,
 } from '../../domain/layouts/Position/type';
@@ -93,12 +94,25 @@ export class SuperLendyInstruction {
     return this.ix(keys, data);
   }
 
+  public closePosition({
+    position,
+    owner = this.auth,
+  }: ClosePositionParams) {
+    const keys = [
+      SuperLendyInstruction.meta(position, true, false),
+      SuperLendyInstruction.meta(owner, true, true),  
+    ];
+
+    const data = this.encode(
+      SuperLendyInstructionId.ClosePosition,
+    );
+    return this.ix(keys, data);
+  }
+
   public async createPositionAccount(
     position: PublicKey,
     auth: PublicKey = this.auth,
   ) {
-    console.log('position', position.toString());
-    console.log('auth', auth.toString());
     const lamports = await this.connection.getMinimumBalanceForRentExemption(
       SuperLendyAccounts.position.span,
     );
