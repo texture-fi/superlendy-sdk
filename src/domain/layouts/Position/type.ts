@@ -12,3 +12,8 @@ export interface CreatePositionParams {
   owner?: PublicKey;
   type?: PositionType;
 }
+
+export interface ClosePositionParams {
+  position: PublicKey;
+  owner?: PublicKey;
+}
