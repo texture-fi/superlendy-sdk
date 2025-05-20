@@ -94,18 +94,13 @@ export class SuperLendyInstruction {
     return this.ix(keys, data);
   }
 
-  public closePosition({
-    position,
-    owner = this.auth,
-  }: ClosePositionParams) {
+  public closePosition({ position, owner = this.auth }: ClosePositionParams) {
     const keys = [
       SuperLendyInstruction.meta(position, true, false),
-      SuperLendyInstruction.meta(owner, true, true),  
+      SuperLendyInstruction.meta(owner, true, true),
     ];
 
-    const data = this.encode(
-      SuperLendyInstructionId.ClosePosition,
-    );
+    const data = this.encode(SuperLendyInstructionId.ClosePosition);
     return this.ix(keys, data);
   }
 
@@ -130,10 +125,12 @@ export class SuperLendyInstruction {
     position,
     reserve,
     lpMint,
+    sourceLpWallet,
     memo = new Uint8Array(COLLATERAL_MEMO_LEN),
     owner = this.auth,
   }: LockCollateralParams) {
-    const sourceLpWallet = getAssociatedTokenAddressSync(lpMint, owner);
+    sourceLpWallet =
+      sourceLpWallet || getAssociatedTokenAddressSync(lpMint, owner);
     const [reserveCollateralSupply] = findReserveCollateralSupply(reserve);
 
     const keys = [
@@ -466,7 +463,12 @@ export class SuperLendyInstruction {
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
     const [programAuthority] = findProgramAddress();
-    const destinationWallet = getAssociatedTokenAddressSync(liquidityMint, auth, false, liquidityTokenProgram);
+    const destinationWallet = getAssociatedTokenAddressSync(
+      liquidityMint,
+      auth,
+      false,
+      liquidityTokenProgram,
+    );
 
     const keys = [
       SuperLendyInstruction.meta(reserve, true, false),
@@ -493,7 +495,12 @@ export class SuperLendyInstruction {
     auth: PublicKey = this.auth,
   ) {
     const [liquiditySupply] = findLiquiditySupply(reserve);
-    const sourceWallet = getAssociatedTokenAddressSync(liquidityMint, auth, false, liquidityTokenProgram);
+    const sourceWallet = getAssociatedTokenAddressSync(
+      liquidityMint,
+      auth,
+      false,
+      liquidityTokenProgram,
+    );
 
     const keys = [
       SuperLendyInstruction.meta(sourceWallet, true, false),
