@@ -1,7 +1,7 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { SUPER_LENDY_ID, TEXTURE_CONFIG_ID } from '../../const';
 import { reserveLayout, textureConfigLayout } from '../../domain';
-import { MAX_DEPOSITS, positionLayout } from '../../domain/layouts/Position';
+import { DISCRIMINATOR, MAX_DEPOSITS, positionLayout } from '../../domain/layouts/Position';
 import { priceFeedLayout } from '../../domain/layouts/PriceFeed';
 import { depositedCollateralLayout } from '../../domain/layouts/Position/DepositedCollateral';
 import { DepositedCollateralLayout } from '../../domain/layouts/Position/DepositedCollateral';
@@ -65,7 +65,10 @@ export class SuperLendyAccounts {
         {
           filters: [
             {
-              dataSize: SuperLendyAccounts.position.span,
+              memcmp: {
+                offset: 0,
+                bytes: DISCRIMINATOR,
+              },
             },
             {
               memcmp: {

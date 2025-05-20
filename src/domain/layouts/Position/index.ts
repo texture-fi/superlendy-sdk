@@ -12,6 +12,9 @@ import {
 } from './BorrowedLiquidity';
 import { rewardsLayout, RewardsLayout } from '../common/Rewards';
 import { PositionType } from './type';
+import { bs58 } from '@coral-xyz/anchor/dist/cjs/utils/bytes';
+
+export const DISCRIMINATOR = bs58.encode(Buffer.from('POSITION'));
 
 export const MAX_DEPOSITS = 10;
 const MAX_BORROWS = 10;
