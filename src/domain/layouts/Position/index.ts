@@ -13,7 +13,7 @@ import {
 import { rewardsLayout, RewardsLayout } from '../common/Rewards';
 import { PositionType } from './type';
 
-const MAX_DEPOSITS = 10;
+export const MAX_DEPOSITS = 10;
 const MAX_BORROWS = 10;
 
 export interface PositionLayout {

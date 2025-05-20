@@ -1,8 +1,10 @@
 import { Connection, PublicKey } from '@solana/web3.js';
-import { TEXTURE_CONFIG_ID } from '../../const';
+import { SUPER_LENDY_ID, TEXTURE_CONFIG_ID } from '../../const';
 import { reserveLayout, textureConfigLayout } from '../../domain';
-import { positionLayout } from '../../domain/layouts/Position';
+import { MAX_DEPOSITS, positionLayout } from '../../domain/layouts/Position';
 import { priceFeedLayout } from '../../domain/layouts/PriceFeed';
+import { depositedCollateralLayout } from '../../domain/layouts/Position/DepositedCollateral';
+import { DepositedCollateralLayout } from '../../domain/layouts/Position/DepositedCollateral';
 
 export class SuperLendyAccounts {
   constructor(private connection: Connection) {}
@@ -52,6 +54,55 @@ export class SuperLendyAccounts {
       console.error(e);
       throw Error(`Incorrect account ${priceFeed}`);
     }
+  }
+
+  async getAllDepositsByReserve(reserve: PublicKey) {
+    const resultDeposits: DepositedCollateralLayout[] = [];
+
+    for (let i = 0; i < MAX_DEPOSITS; i++) {
+      const positions = await this.connection.getProgramAccounts(
+        SUPER_LENDY_ID,
+        {
+          filters: [
+            {
+              dataSize: SuperLendyAccounts.position.span,
+            },
+            {
+              memcmp: {
+                offset: 112 + depositedCollateralLayout.span * i,
+                bytes: reserve.toBase58(),
+              },
+            },
+          ],
+        },
+      );
+
+      const depositsBatch = positions.map((position) => {
+        if (position.account === null) {
+          throw new Error('Invalid account');
+        }
+        if (!position.account.owner.equals(SUPER_LENDY_ID)) {
+          throw new Error("Account doesn't belong to this program");
+        }
+        const positionData = positionLayout.decode(position.account.data);
+
+        if (!positionData) {
+          throw Error('Could not parse position.');
+        }
+
+        const deposit = positionData.collateral.filter((collateral) => collateral.deposit_reserve.equals(reserve))[0];
+
+        if (!deposit) {
+          throw Error('Could not parse deposit.');
+        }
+
+        return deposit;
+      });
+
+      resultDeposits.push(...depositsBatch);
+    }
+
+    return resultDeposits;
   }
 
   static readonly priceFeed = priceFeedLayout;
