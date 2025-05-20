@@ -1,8 +1,9 @@
 import { Connection, PublicKey } from '@solana/web3.js';
-import { TEXTURE_CONFIG_ID } from '../../const';
+import { SUPER_LENDY_ID, TEXTURE_CONFIG_ID } from '../../const';
 import { reserveLayout, textureConfigLayout } from '../../domain';
-import { positionLayout } from '../../domain/layouts/Position';
+import { DISCRIMINATOR, MAX_DEPOSITS, PositionLayout, positionLayout } from '../../domain/layouts/Position';
 import { priceFeedLayout } from '../../domain/layouts/PriceFeed';
+import { depositedCollateralLayout } from '../../domain/layouts/Position/DepositedCollateral';
 
 export class SuperLendyAccounts {
   constructor(private connection: Connection) {}
@@ -52,6 +53,52 @@ export class SuperLendyAccounts {
       console.error(e);
       throw Error(`Incorrect account ${priceFeed}`);
     }
+  }
+
+  async getAllPositionsByReserve(reserve: PublicKey) {
+    const resultPositions: PositionLayout[] = [];
+
+    for (let i = 0; i < MAX_DEPOSITS; i++) {
+      const positions = await this.connection.getProgramAccounts(
+        SUPER_LENDY_ID,
+        {
+          filters: [
+            {
+              memcmp: {
+                offset: 0,
+                bytes: DISCRIMINATOR,
+              },
+            },
+            {
+              memcmp: {
+                offset: 112 + depositedCollateralLayout.span * i,
+                bytes: reserve.toBase58(),
+              },
+            },
+          ],
+        },
+      );
+
+      const positionsBatch = positions.map((position) => {
+        if (position.account === null) {
+          throw new Error('Invalid account');
+        }
+        if (!position.account.owner.equals(SUPER_LENDY_ID)) {
+          throw new Error("Account doesn't belong to this program");
+        }
+        const positionData = positionLayout.decode(position.account.data);
+
+        if (!positionData) {
+          throw Error('Could not parse position.');
+        }
+
+        return positionData;
+      });
+
+      resultPositions.push(...positionsBatch);
+    }
+
+    return resultPositions;
   }
 
   static readonly priceFeed = priceFeedLayout;
