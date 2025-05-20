@@ -1,10 +1,9 @@
 import { Connection, PublicKey } from '@solana/web3.js';
 import { SUPER_LENDY_ID, TEXTURE_CONFIG_ID } from '../../const';
 import { reserveLayout, textureConfigLayout } from '../../domain';
-import { DISCRIMINATOR, MAX_DEPOSITS, positionLayout } from '../../domain/layouts/Position';
+import { DISCRIMINATOR, MAX_DEPOSITS, PositionLayout, positionLayout } from '../../domain/layouts/Position';
 import { priceFeedLayout } from '../../domain/layouts/PriceFeed';
 import { depositedCollateralLayout } from '../../domain/layouts/Position/DepositedCollateral';
-import { DepositedCollateralLayout } from '../../domain/layouts/Position/DepositedCollateral';
 
 export class SuperLendyAccounts {
   constructor(private connection: Connection) {}
@@ -56,8 +55,8 @@ export class SuperLendyAccounts {
     }
   }
 
-  async getAllDepositsByReserve(reserve: PublicKey) {
-    const resultDeposits: DepositedCollateralLayout[] = [];
+  async getAllPositionsByReserve(reserve: PublicKey) {
+    const resultPositions: PositionLayout[] = [];
 
     for (let i = 0; i < MAX_DEPOSITS; i++) {
       const positions = await this.connection.getProgramAccounts(
@@ -80,7 +79,7 @@ export class SuperLendyAccounts {
         },
       );
 
-      const depositsBatch = positions.map((position) => {
+      const positionsBatch = positions.map((position) => {
         if (position.account === null) {
           throw new Error('Invalid account');
         }
@@ -93,19 +92,13 @@ export class SuperLendyAccounts {
           throw Error('Could not parse position.');
         }
 
-        const deposit = positionData.collateral.filter((collateral) => collateral.deposit_reserve.equals(reserve))[0];
-
-        if (!deposit) {
-          throw Error('Could not parse deposit.');
-        }
-
-        return deposit;
+        return positionData;
       });
 
-      resultDeposits.push(...depositsBatch);
+      resultPositions.push(...positionsBatch);
     }
 
-    return resultDeposits;
+    return resultPositions;
   }
 
   static readonly priceFeed = priceFeedLayout;
