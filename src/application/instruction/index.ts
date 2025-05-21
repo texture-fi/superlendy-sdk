@@ -234,6 +234,21 @@ export class SuperLendyInstruction {
     return this.ix(keys, data);
   }
 
+  public refreshReserveWeak(
+    reserve: PublicKey,
+    irm: PublicKey,
+  ) {
+    const keys = [
+      SuperLendyInstruction.meta(reserve, true, false),
+      SuperLendyInstruction.meta(irm, false, false),
+      SuperLendyInstruction.meta(TEXTURE_CONFIG_ID, false, false),
+    ];
+
+    const data = this.encode(SuperLendyInstructionId.RefreshReserveWeak);
+
+    return this.ix(keys, data);
+  }
+
   public refreshPosition(
     position: PublicKey,
     borrows_reserves: PublicKey[],
