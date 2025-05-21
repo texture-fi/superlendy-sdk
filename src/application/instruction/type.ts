@@ -67,6 +67,8 @@ export enum SuperLendyInstructionId {
   TransferTextureConfigOwnership,
   /// Always fails but prints contact version in to returned logs
   Version,
+  SetLpMetadata,
+  RefreshReserveWeak,
 }
 
 export enum PriceProxyInstructionId {
