@@ -1,6 +1,6 @@
 {
   "name": "@texture-finance/superlendy-sdk",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "Texture SuperLendy SDK",
   "main": "build/src/index.js",
   "files": [

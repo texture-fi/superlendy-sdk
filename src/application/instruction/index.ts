@@ -81,7 +81,7 @@ export class SuperLendyInstruction {
     type = PositionType.POSITION_TYPE_CLASSIC,
   }: CreatePositionParams) {
     const keys = [
-      SuperLendyInstruction.meta(position, true, true),
+      SuperLendyInstruction.meta(position, true, false),
       SuperLendyInstruction.meta(pool, false, false),
       SuperLendyInstruction.meta(owner, true, true),
     ];
