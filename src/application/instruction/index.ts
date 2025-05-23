@@ -81,7 +81,7 @@ export class SuperLendyInstruction {
     type = PositionType.POSITION_TYPE_CLASSIC,
   }: CreatePositionParams) {
     const keys = [
-      SuperLendyInstruction.meta(position, true, true),
+      SuperLendyInstruction.meta(position, true, false),
       SuperLendyInstruction.meta(pool, false, false),
       SuperLendyInstruction.meta(owner, true, true),
     ];
@@ -130,7 +130,7 @@ export class SuperLendyInstruction {
     owner = this.auth,
   }: LockCollateralParams) {
     sourceLpWallet =
-      sourceLpWallet || getAssociatedTokenAddressSync(lpMint, owner);
+      sourceLpWallet || getAssociatedTokenAddressSync(lpMint, owner, true);
     const [reserveCollateralSupply] = findReserveCollateralSupply(reserve);
 
     const keys = [
@@ -172,14 +172,14 @@ export class SuperLendyInstruction {
     const destinationLiquidityWallet = getAssociatedTokenAddressSync(
       liquidityMint,
       borrower,
-      false,
+      true,
       liquidityTokenProgram,
     );
 
     const textureFeeReceiver = getAssociatedTokenAddressSync(
       liquidityMint,
       feeAuthority,
-      false,
+      true,
       liquidityTokenProgram,
     );
 
@@ -385,7 +385,7 @@ export class SuperLendyInstruction {
     auth = this.auth,
   ) {
     const [reserve_collateral_supply] = findReserveCollateralSupply(reserve);
-    const destination_lp_wallet = getAssociatedTokenAddressSync(lpMint, auth);
+    const destination_lp_wallet = getAssociatedTokenAddressSync(lpMint, auth, true);
     const [program_authority] = findProgramAddress();
     const keys = [
       SuperLendyInstruction.meta(position, true, false),
@@ -418,7 +418,7 @@ export class SuperLendyInstruction {
     const source_liquidity_wallet = getAssociatedTokenAddressSync(
       liquidityMint,
       auth,
-      false,
+      true,
       liquidityTokenProgram,
     );
     const [liquidity_supply] = findLiquiditySupply(reserve);
@@ -481,7 +481,7 @@ export class SuperLendyInstruction {
     const destinationWallet = getAssociatedTokenAddressSync(
       liquidityMint,
       auth,
-      false,
+      true,
       liquidityTokenProgram,
     );
 
@@ -513,7 +513,7 @@ export class SuperLendyInstruction {
     const sourceWallet = getAssociatedTokenAddressSync(
       liquidityMint,
       auth,
-      false,
+      true,
       liquidityTokenProgram,
     );
 
