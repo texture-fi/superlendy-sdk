@@ -77,4 +77,6 @@ export enum PriceProxyInstructionId {
   UpdatePrice,
   AlterPriceFeed,
   DeletePriceFeed,
+  Version,
+  UpdatePrice2,
 }

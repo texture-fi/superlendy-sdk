@@ -52,3 +52,11 @@ export interface UpdatePriceLayout {
 export const updatePriceLayout = struct<UpdatePriceLayout>([
   u64('maximum_age_sec'),
 ]);
+
+export interface UpdatePrice2Layout {
+  maximum_age_sec: bigint;
+}
+
+export const updatePrice2Layout = struct<UpdatePrice2Layout>([
+  u64('maximum_age_sec'),
+]);

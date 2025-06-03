@@ -42,7 +42,7 @@ import {
 } from '../../domain/layouts/Position/type';
 import { LockCollateralParams } from '../../domain/layouts/LockCollateral/type';
 import { BorrowParams } from '../../domain/layouts/Borrow/type';
-import { updatePriceLayout } from '../../domain/layouts/PriceFeed';
+import { updatePrice2Layout, updatePriceLayout } from '../../domain/layouts/PriceFeed';
 import {
   positionParamsLayout,
   PositionParamsLayout,
@@ -288,6 +288,27 @@ export class SuperLendyInstruction {
       PriceProxyInstructionId.UpdatePrice,
       { maximum_age_sec },
       updatePriceLayout,
+    );
+
+    return this.ix(keys, data, PRICE_PROXY_ID);
+  }
+
+  public updatePrice2(
+    priceFeed: PublicKey,
+    sourceAddresses: PublicKey[],
+    transformSourceAddresses: PublicKey[],
+    maximum_age_sec = 60n,
+  ) {
+    const keys = [
+      SuperLendyInstruction.meta(priceFeed, true, false),
+      ...sourceAddresses.map((address) => SuperLendyInstruction.meta(address, true, false)),
+      ...transformSourceAddresses.map((address) => SuperLendyInstruction.meta(address, true, false)),
+    ];
+
+    const data = this.encode(
+      PriceProxyInstructionId.UpdatePrice2,
+      { maximum_age_sec },
+      updatePrice2Layout,
     );
 
     return this.ix(keys, data, PRICE_PROXY_ID);
