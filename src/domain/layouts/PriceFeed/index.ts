@@ -54,9 +54,13 @@ export const updatePriceLayout = struct<UpdatePriceLayout>([
 ]);
 
 export interface UpdatePrice2Layout {
+  source_addresses_count: number;
+  transform_source_addresses_count: number;
   maximum_age_sec: bigint;
 }
 
 export const updatePrice2Layout = struct<UpdatePrice2Layout>([
+  u8('source_addresses_count'),
+  u8('transform_source_addresses_count'),
   u64('maximum_age_sec'),
 ]);
