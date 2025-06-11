@@ -42,7 +42,10 @@ import {
 } from '../../domain/layouts/Position/type';
 import { LockCollateralParams } from '../../domain/layouts/LockCollateral/type';
 import { BorrowParams } from '../../domain/layouts/Borrow/type';
-import { updatePrice2Layout, updatePriceLayout } from '../../domain/layouts/PriceFeed';
+import {
+  updatePrice2Layout,
+  updatePriceLayout,
+} from '../../domain/layouts/PriceFeed';
 import {
   positionParamsLayout,
   PositionParamsLayout,
@@ -231,10 +234,7 @@ export class SuperLendyInstruction {
     return this.ix(keys, data);
   }
 
-  public refreshReserveWeak(
-    reserve: PublicKey,
-    irm: PublicKey,
-  ) {
+  public refreshReserveWeak(reserve: PublicKey, irm: PublicKey) {
     const keys = [
       SuperLendyInstruction.meta(reserve, true, false),
       SuperLendyInstruction.meta(irm, false, false),
@@ -280,8 +280,8 @@ export class SuperLendyInstruction {
   ) {
     const keys = [
       SuperLendyInstruction.meta(priceFeed, true, false),
-      SuperLendyInstruction.meta(sourceAddress, true, false),
-      SuperLendyInstruction.meta(transformSourceAddress, true, false),
+      SuperLendyInstruction.meta(sourceAddress, false, false),
+      SuperLendyInstruction.meta(transformSourceAddress, false, false),
     ];
 
     const data = this.encode(
@@ -301,8 +301,12 @@ export class SuperLendyInstruction {
   ) {
     const keys = [
       SuperLendyInstruction.meta(priceFeed, true, false),
-      ...sourceAddresses.map((address) => SuperLendyInstruction.meta(address, true, false)),
-      ...transformSourceAddresses.map((address) => SuperLendyInstruction.meta(address, true, false)),
+      ...sourceAddresses.map((address) =>
+        SuperLendyInstruction.meta(address, true, false),
+      ),
+      ...transformSourceAddresses.map((address) =>
+        SuperLendyInstruction.meta(address, true, false),
+      ),
     ];
 
     const data = this.encode(
@@ -406,7 +410,11 @@ export class SuperLendyInstruction {
     auth = this.auth,
   ) {
     const [reserve_collateral_supply] = findReserveCollateralSupply(reserve);
-    const destination_lp_wallet = getAssociatedTokenAddressSync(lpMint, auth, true);
+    const destination_lp_wallet = getAssociatedTokenAddressSync(
+      lpMint,
+      auth,
+      true,
+    );
     const [program_authority] = findProgramAddress();
     const keys = [
       SuperLendyInstruction.meta(position, true, false),
