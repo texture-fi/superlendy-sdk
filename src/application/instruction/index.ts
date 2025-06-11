@@ -307,7 +307,7 @@ export class SuperLendyInstruction {
 
     const data = this.encode(
       PriceProxyInstructionId.UpdatePrice2,
-      { maximum_age_sec },
+      { maximum_age_sec, source_addresses_count: sourceAddresses.length, transform_source_addresses_count: transformSourceAddresses.length },
       updatePrice2Layout,
     );
 
